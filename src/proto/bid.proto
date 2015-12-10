@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package bid;
+
+// The bidder service definition
+service Bidder {
+  // Sends a response
+  rpc Bid(BidRequest) returns (BidResponse) {}
+}
+
+// The request containing a user's identifier
+message BidRequest {
+  required string user_identifier = 1;
+}
+
+// The response containing a bid or no-bid
+message BidResponse {
+  required bool bid = 1;
+}
