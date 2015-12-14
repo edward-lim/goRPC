@@ -25,11 +25,11 @@ func main() {
 	c := pb.NewBidderClient(conn)
 
 	name := default_id
-	r, err := c.Bid(context.Background(), &pb.BidRequest{UserIdentifier: &name})
+	r, err := c.Bid(context.Background(), &pb.BidRequest{UserIdentifier: name})
 
 	if err != nil {
 		fmt.Errorf("Request broke, yo. Here's error: %v", err)
 	}
 
-	fmt.Printf("Bid? %s\n", strconv.FormatBool(*r.Bid))
+	fmt.Printf("Bid? %s\n", strconv.FormatBool(r.Bid))
 }

@@ -16,10 +16,9 @@ const (
 type server struct{}
 
 func (s *server) Bid(ctx context.Context, in *pb.BidRequest) (*pb.BidResponse, error) {
-	ret_val := true
-	fmt.Printf("Request came in for: %s\n", *in.UserIdentifier)
+	fmt.Printf("Request came in for: %s\n", in.UserIdentifier)
 	fmt.Println("Received request")
-	return &pb.BidResponse{Bid: &ret_val}, nil
+	return &pb.BidResponse{Bid: true}, nil
 }
 
 func main() {
