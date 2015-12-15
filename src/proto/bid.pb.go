@@ -18,6 +18,11 @@ import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
+import (
+	context "golang.org/x/net/context"
+	grpc "google.golang.org/grpc"
+)
+
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -47,6 +52,70 @@ func init() {
 	proto.RegisterType((*BidRequest)(nil), "bid.BidRequest")
 	proto.RegisterType((*BidResponse)(nil), "bid.BidResponse")
 }
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// Client API for Bidder service
+
+type BidderClient interface {
+	// Sends a response
+	Bid(ctx context.Context, in *BidRequest, opts ...grpc.CallOption) (*BidResponse, error)
+}
+
+type bidderClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewBidderClient(cc *grpc.ClientConn) BidderClient {
+	return &bidderClient{cc}
+}
+
+func (c *bidderClient) Bid(ctx context.Context, in *BidRequest, opts ...grpc.CallOption) (*BidResponse, error) {
+	out := new(BidResponse)
+	err := grpc.Invoke(ctx, "/bid.Bidder/Bid", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for Bidder service
+
+type BidderServer interface {
+	// Sends a response
+	Bid(context.Context, *BidRequest) (*BidResponse, error)
+}
+
+func RegisterBidderServer(s *grpc.Server, srv BidderServer) {
+	s.RegisterService(&_Bidder_serviceDesc, srv)
+}
+
+func _Bidder_Bid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(BidRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	out, err := srv.(BidderServer).Bid(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+var _Bidder_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "bid.Bidder",
+	HandlerType: (*BidderServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Bid",
+			Handler:    _Bidder_Bid_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{},
+}
+
 func (m *BidRequest) Marshal() (data []byte, err error) {
 	size := m.Size()
 	data = make([]byte, size)
